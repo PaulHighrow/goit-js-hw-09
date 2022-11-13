@@ -17,7 +17,7 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-function addLeadingZero(value) { 
+function addLeadingZero(value) {
   return value.toString().padStart(2, '0');
 }
 
@@ -43,7 +43,11 @@ const options = {
   onClose(selectedDates) {
     const chosenDate = Date.parse(selectedDates[0]);
     if (chosenDate <= Date.parse(new Date())) {
-      Report.failure('❌', 'Please choose a date in the future');
+      Report.failure(
+        '❌ Something is wrong!',
+        'Please choose a date in the future',
+        'Okay'
+      );
       return;
     }
     startButtonEl.disabled = false;
@@ -51,8 +55,7 @@ const options = {
     startButtonEl.addEventListener('click', () => {
       startButtonEl.disabled = true;
       datePickerEl.disabled = true;
-      let timerId = null;
-      timerId = setInterval(() => {
+      let timerId = setInterval(() => {
         let timerValues = convertMs(chosenDate - Date.parse(new Date()));
 
         secondsEl.textContent = addLeadingZero(timerValues.seconds);
@@ -62,7 +65,11 @@ const options = {
 
         if (chosenDate - Date.parse(new Date()) === 0) {
           clearInterval(timerId);
-          Report.success("✅ Time's up, refresh your page!");
+          Report.success(
+            "✅ Time's up!",
+            'Refresh your page to try again',
+            'Okay'
+          );
         }
       }, 1000);
     });
